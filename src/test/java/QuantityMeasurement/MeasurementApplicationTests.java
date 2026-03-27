@@ -33,4 +33,39 @@ class MeasurementApplicationTests {
         assertNotEquals(f1, other);
 
     }
+    
+    
+    
+    
+    @Test
+    void testInchEquality_SameValue() {
+
+        MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(89.6);
+
+        MeasurementApplication.Inch I2 = new MeasurementApplication.Inch(89.6);
+        assertEquals(I1, I2);
+
+    }
+    @Test
+    void testInchEquality_DifferentValue() {
+    	MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(89.6);
+    	MeasurementApplication.Inch I2 = new MeasurementApplication.Inch(34.6);
+        assertNotEquals(I1, I2);
+
+    }
+    @Test
+
+    void testInchEquality_NullValue() {
+    	MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(5.0);
+        assertNotEquals(I1, null);
+
+    }
+
+    @Test
+    void testInchEquality_DifferentType() {
+    	MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(5.0);
+        String other = "5.0";
+        assertNotEquals(I1, other);
+
+    }
 }
