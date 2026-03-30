@@ -1,93 +1,49 @@
 package QuantityMeasurement;
 
+import com.quantity.measurement.enums.LengthUnit;
+import com.quantity.measurement.model.QuantityLength;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class MeasurementApplication {
-	 static class Feet {
-	        private final double value;
-	        // Constructor
+    public static void main(String[] args) {
 
-	        public Feet(double value) {
+        Scanner scanner = new Scanner(System.in);
 
-	            this.value = value;
+        try {
+            System.out.print("Enter first value: ");
+            double value1 = Double.parseDouble(scanner.nextLine());
 
-	        }
-	        // Override equals method
+            System.out.print("Enter first unit (Feet, Inch): ");
+            String unit1 = scanner.nextLine();
 
-	        @Override
+            System.out.print("Enter second value: ");
+            double value2 = Double.parseDouble(scanner.nextLine());
 
-	        public boolean equals(Object obj) {
+            System.out.print("Enter second unit (Feet, Inch): ");
+            String unit2 = scanner.nextLine();
 
-	            if (this == obj) return true;
+            // ✅ FIX: Proper format conversion
+            LengthUnit u1 = LengthUnit.valueOf(
+                unit1.substring(0,1).toUpperCase() + unit1.substring(1).toLowerCase()
+            );
 
+            LengthUnit u2 = LengthUnit.valueOf(
+                unit2.substring(0,1).toUpperCase() + unit2.substring(1).toLowerCase()
+            );
 
+            QuantityLength length1 = new QuantityLength(value1, u1);
+            QuantityLength length2 = new QuantityLength(value2, u2);
 
-	            if (obj == null || getClass() != obj.getClass())
+            if (length1.equals(length2)) {
+                System.out.println("The two lengths are equal.");
+            } else {
+                System.out.println("The two lengths are NOT equal.");
+            }
 
-	                return false;
-
-
-
-	            Feet other = (Feet) obj;
-	            return Double.compare(this.value, other.value) == 0;
-	            
-
-	        }
-	     }
-	        static class Inch {
-		        private final double value;
-		        // Constructor
-
-		        public Inch(double value) {
-
-		            this.value = value;
-
-		        }
-		        // Override equals method
-
-		        @Override
-
-		        public boolean equals(Object obj) {
-
-		            if (this == obj) return true;
-
-
-
-		            if (obj == null || getClass() != obj.getClass())
-
-		                return false;
-
-
-
-		            
-		            Inch other = (Inch) obj;
-		            return Double.compare(this.value, other.value) == 0;
-		            
-		            
-
-		        }
-
-	    }
-
-	    // Main method to test
-
-	    public static void main(String[] args) {
-
-	    	//SpringApplication.run(MeasurementApplication.class,args);
-
-	        Feet f1 = new Feet(5.0);
-
-	        Feet f2 = new Feet(5.0);
-	        System.out.println("Are equal? " + f1.equals(f2));
-	        
-	        
-	        Inch I1 = new Inch(5.0);
-
-	        Inch I2 = new Inch(5.0);
-	        System.out.println("Are equal? " + I1.equals(I2));
-	        
-
-	    }
-
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: Invalid unit entered!");
+        }
+    }
 }

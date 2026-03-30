@@ -1,71 +1,102 @@
 package QuantityMeasurement;
+import com.quantity.measurement.enums.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import com.quantity.measurement.model.QuantityLength;
 import org.junit.jupiter.api.Test;
 class MeasurementApplicationTests {
 	@Test
-    void testFeetEquality_SameValue() {
 
-        MeasurementApplication.Feet f1 = new MeasurementApplication.Feet(89.6);
+    void testEquality_FeetToFeet_SameValue() {
 
-        MeasurementApplication.Feet f2 = new MeasurementApplication.Feet(89.6);
-        assertEquals(f1, f2);
-
-    }
-    @Test
-    void testFeetEquality_DifferentValue() {
-    	MeasurementApplication.Feet f1 = new MeasurementApplication.Feet(89.6);
-    	MeasurementApplication.Feet f2 = new MeasurementApplication.Feet(34.6);
-        assertNotEquals(f1, f2);
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.Feet);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.Feet);
+        assertEquals(q1, q2);
 
     }
+	
     @Test
 
-    void testFeetEquality_NullValue() {
-    	MeasurementApplication.Feet f1 = new MeasurementApplication.Feet(5.0);
-        assertNotEquals(f1, null);
+    void testEquality_InchToInch_SameValue() {
+
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.Inch);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.Inch);
+        assertEquals(q1, q2);
 
     }
 
     @Test
-    void testFeetEquality_DifferentType() {
-    	MeasurementApplication.Feet f1 = new MeasurementApplication.Feet(5.0);
-        String other = "5.0";
-        assertNotEquals(f1, other);
+
+    void testEquality_FeetToInch_EquivalentValue() {
+
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.Feet);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.Inch);
+        assertEquals(q1, q2);
+
+    }
+    @Test
+
+    void testEquality_InchToFeet_EquivalentValue() {
+    	
+        QuantityLength q1 = new QuantityLength(12.0, LengthUnit.Inch);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.Feet);
+        assertEquals(q1, q2);
+
+    }
+
+    @Test
+
+    void testEquality_FeetToFeet_DifferentValue() {
+
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.Feet);
+        QuantityLength q2 = new QuantityLength(2.0, LengthUnit.Feet);
+        assertNotEquals(q1, q2);
+
+    }
+
+    @Test
+
+    void testEquality_InchToInch_DifferentValue() {
+
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.Inch);
+        QuantityLength q2 = new QuantityLength(2.0, LengthUnit.Inch);
+        assertNotEquals(q1, q2);
+
+    }
+
+    @Test
+
+    void testEquality_InvalidUnit() {
+
+        assertThrows(IllegalArgumentException.class, () -> {
+
+            new QuantityLength(5.0, null);
+        });
+    }
+    @Test
+
+    void testEquality_SameReference() {
+
+        QuantityLength q1 = new QuantityLength(5.0, LengthUnit.Feet);
+        assertEquals(q1, q1);
 
     }
     
-    
-    
-    
-    @Test
-    void testInchEquality_SameValue() {
-
-        MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(89.6);
-
-        MeasurementApplication.Inch I2 = new MeasurementApplication.Inch(89.6);
-        assertEquals(I1, I2);
-
-    }
-    @Test
-    void testInchEquality_DifferentValue() {
-    	MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(89.6);
-    	MeasurementApplication.Inch I2 = new MeasurementApplication.Inch(34.6);
-        assertNotEquals(I1, I2);
-
-    }
     @Test
 
-    void testInchEquality_NullValue() {
-    	MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(5.0);
-        assertNotEquals(I1, null);
+    void testEquality_NullComparison() {
+
+        QuantityLength q1 = new QuantityLength(5.0, LengthUnit.Feet);
+        assertNotEquals(q1, null);
 
     }
 
     @Test
-    void testInchEquality_DifferentType() {
-    	MeasurementApplication.Inch I1 = new MeasurementApplication.Inch(5.0);
-        String other = "5.0";
-        assertNotEquals(I1, other);
+
+    void testEquality_NonNumericInput() {
+
+        QuantityLength q1 = new QuantityLength(5.0, LengthUnit.Feet);
+        assertNotEquals(q1, "5.0");
 
     }
 }
