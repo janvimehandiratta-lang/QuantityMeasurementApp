@@ -3,43 +3,41 @@ import com.quantity.measurement.enums.LengthUnit;
 
 public class QuantityLength {
 
-    private final double value;
-    private final LengthUnit unit;
+	private static final double EPSILON = 1e-6;
+	 private double value;
+	    private LengthUnit unit;
+	  public QuantityLength(double value, LengthUnit unit) {
+	        if (unit == null) {
+	            throw new IllegalArgumentException("Unit cannot be null");
 
-    public QuantityLength(double value, LengthUnit unit) {
-        if(unit==null)throw new IllegalArgumentException("unit should not be null");
-        this.value = value;
-        this.unit = unit;
-    }
+	        }
 
-    private double toBaseUnit() {
-        return unit.toFeet(value);
-    }
+	        this.value = value;
+	        this.unit = unit;
+	    }
+//	    public double toFeet() {
+//	        return unit.toFeet(value);
+//
+//	    }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
+	    @Override
+	    public boolean equals(Object obj) {
+	        if (this == obj) return true;
+	        if (obj == null || getClass() != obj.getClass()) return false;
+	        QuantityLength other = (QuantityLength) obj;
+	        double thisInFeet=this.unit.toFeet(this.value);
 
-        if (obj == null || getClass() != obj.getClass()) return false;
+	        double otherInFeet=other.unit.toFeet(other.value);
 
-        QuantityLength other = (QuantityLength) obj;
+	        return Math.abs(thisInFeet - otherInFeet) < EPSILON ;
 
-        
-        double thisInFeet = this.unit.toFeet(this.value);
-        double otherInFeet = other.unit.toFeet(other.value);
+	    }
 
-        return Double.compare(thisInFeet, otherInFeet) == 0;
-    }
+	    @Override
 
+	    public String toString() {
 
-public static void main(String[] args) {
-    QuantityLength q1 = new QuantityLength(1.0, LengthUnit.Feet);
-    QuantityLength q2 = new QuantityLength(12.0, LengthUnit.Inch);
+	        return value + " " + unit.name();
 
-    QuantityLength q3 = new QuantityLength(1.0, LengthUnit.Inch);
-    QuantityLength q4 = new QuantityLength(1.0, LengthUnit.Inch);
-
-    System.out.println(q1.equals(q2));
-    System.out.println(q3.equals(q4));
-}
+	    }
 }
