@@ -10,6 +10,7 @@ import com.quantity.measurement.model.QuantityLength;
 class MeasurementApplicationTests {
 	
 	private static final double EPSILON = 1e-6;
+	 private static final double DELTA = 1e-3;
 	
 	//1
 	@Test
@@ -356,4 +357,151 @@ class MeasurementApplicationTests {
         		assertEquals(new QuantityLength(0.003, LengthUnit.FEET), result);
     }
     
-}
+    @Test
+    void testAddition_ExplicitTargetUnit_Feet() {
+        // Explicit target = FEET: 1ft + 1ft = 2.0 FEET
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength result = q1.add(q2, LengthUnit.FEET);
+        
+        assertEquals(2.0, result.toConvert(LengthUnit.FEET), DELTA);
+        assertTrue(result.toString().contains("FEET"));
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_Inches() {
+        // Explicit target = INCHES: 1ft + 1ft = 24.0 INCHES
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength result = q1.add(q2, LengthUnit.INCH);
+        
+        assertEquals(24.0, result.toConvert(LengthUnit.INCH), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_Yards() {
+        // Target unit different from both operands: 1ft + 1ft = ~0.667 YARDS
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength result = q1.add(q2, LengthUnit.YARD);
+        
+        assertEquals(0.667, result.toConvert(LengthUnit.YARD), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_Centimeters() {
+        // Explicit target = CENTIMETERS: 1in + 1in = ~5.08 CM
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.INCH);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.INCH);
+        QuantityLength result = q1.add(q2, LengthUnit.CM);
+        
+        assertEquals(5.08, result.toConvert(LengthUnit.CM), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_SameAsFirstOperand() {
+        // Target matches first operand: 2yd + 3ft (1yd) = 3.0 YARDS
+        QuantityLength q1 = new QuantityLength(2.0, LengthUnit.YARD);
+        QuantityLength q2 = new QuantityLength(3.0, LengthUnit.FEET);
+        QuantityLength result = q1.add(q2, LengthUnit.YARD);
+        
+        assertEquals(3.0, result.toConvert(LengthUnit.YARD), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_SameAsSecondOperand() {
+        // Target matches second operand: 1yd (3ft) + 6ft = 9.0 FEET
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength q2 = new QuantityLength(6.0, LengthUnit.FEET);
+        QuantityLength result = q1.add(q2, LengthUnit.FEET);
+        
+        assertEquals(9.0, result.toConvert(LengthUnit.FEET), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_Commutativity() {
+        // Commutativity with explicit target: A+B should equal B+A
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+        
+        QuantityLength res1 = q1.add(q2, LengthUnit.FEET);
+        QuantityLength res2 = q2.add(q1, LengthUnit.FEET);
+        
+        assertEquals(res1.toConvert(LengthUnit.FEET), res2.toConvert(LengthUnit.FEET), DELTA);
+        assertEquals(res1, res2);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_WithZero() {
+        // Zero operand + explicit target: 0yd + 5ft = ~1.667 YARDS
+        QuantityLength q1 = new QuantityLength(0.0, LengthUnit.YARD);
+        QuantityLength q2 = new QuantityLength(5.0, LengthUnit.FEET);
+        QuantityLength result = q1.add(q2, LengthUnit.YARD);
+        
+        assertEquals(1.667, result.toConvert(LengthUnit.YARD), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_NegativeValues() {
+        // Negative values with target: 48in + (-12in) = 36.0 INCHES
+        QuantityLength q1 = new QuantityLength(48.0, LengthUnit.INCH);
+        QuantityLength q2 = new QuantityLength(-12.0, LengthUnit.INCH);
+        QuantityLength result = q1.add(q2, LengthUnit.INCH);
+        
+        assertEquals(36.0, result.toConvert(LengthUnit.INCH), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_NullTargetUnit() {
+        // Null targetUnit rejected: Expect IllegalArgumentException
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength q2 = new QuantityLength(1.0, LengthUnit.FEET);
+        
+        assertThrows(IllegalArgumentException.class, () -> q1.add(q2, null));
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_LargeToSmallScale() {
+        // Large -> small unit scale: 250yd + 250yd = 18000.0 INCHES
+        QuantityLength q1 = new QuantityLength(250.0, LengthUnit.YARD);
+        QuantityLength q2 = new QuantityLength(250.0, LengthUnit.YARD);
+        QuantityLength result = q1.add(q2, LengthUnit.INCH);
+        
+        assertEquals(18000.0, result.toConvert(LengthUnit.INCH), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_SmallToLargeScale() {
+        // Small -> large unit scale: 12in + 12in = ~0.667 YARDS
+        QuantityLength q1 = new QuantityLength(12.0, LengthUnit.INCH);
+        QuantityLength q2 = new QuantityLength(12.0, LengthUnit.INCH);
+        QuantityLength result = q1.add(q2, LengthUnit.YARD);
+        
+        assertEquals(0.667, result.toConvert(LengthUnit.YARD), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_AllUnitCombinations() {
+        // Verifying mixed addition: 1 Yard + 1 Foot + 12 Inches = 5 Feet
+        QuantityLength yard = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength foot = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCH);
+        
+        QuantityLength sum = yard.add(foot, LengthUnit.FEET).add(inch, LengthUnit.FEET);
+        
+        assertEquals(5.0, sum.toConvert(LengthUnit.FEET), DELTA);
+    }
+
+    @Test
+    void testAddition_ExplicitTargetUnit_PrecisionTolerance() {
+        // Epsilon-based float comparison: Within tolerance (1e-6)
+        QuantityLength q1 = new QuantityLength(1.0, LengthUnit.FEET);
+        // Slightly offset but within your code's EPSILON (1e-6)
+        QuantityLength q2 = new QuantityLength(1.0000001, LengthUnit.FEET);
+        
+        assertEquals(q1, q2, "Quantities should be equal based on internal EPSILON");
+    }
+ 
+       
+    }
+    

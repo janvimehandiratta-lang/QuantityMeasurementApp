@@ -20,7 +20,7 @@ public class QuantityLength {
 		  
         return unit.toFeet(value);
         
-	    }
+	  }
 	    public double toConvert(LengthUnit targetUnit) {
 
 	        return convert(this.value, this.unit, targetUnit);
@@ -43,22 +43,36 @@ public class QuantityLength {
 	        return targetUnit.fromFeet(valueInFeet);
 
 	    }
+	    
+	    //overloaded
 	    public QuantityLength add(QuantityLength other) {
-	        if (other == null) {
+	    	return add(other, this.unit);
+	    }
+	    
+	    
+	    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
+	        
+	    	if (other == null || targetUnit == null) {
 	            throw new IllegalArgumentException("Other quantity cannot be null");
 	        }
-	        if (this.unit == null || other.unit == null) {
-	            throw new IllegalArgumentException("Unit cannot be null");
-	        }
+	        
 	        if (!Double.isFinite(this.value) || !Double.isFinite(other.value)) {
 	            throw new IllegalArgumentException("Invalid numeric value");
 	        }
+	        
 	        double thisInFeet = this.toFeet();
 	        double otherInFeet = other.toFeet();
+	        
 	        double sumInFeet = thisInFeet + otherInFeet;
-	        double resultValue = this.unit.fromFeet(sumInFeet);
-	        return new QuantityLength(resultValue, this.unit);
+	        
+	        double resultValue = targetUnit.fromFeet(sumInFeet);
+	        
+	        return new QuantityLength(resultValue, targetUnit);
 	    }
+	    
+	    
+	    
+	    
 	    @Override
 	    public boolean equals(Object obj) {
 	        if (this == obj) return true;
