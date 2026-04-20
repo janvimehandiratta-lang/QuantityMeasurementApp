@@ -1,8 +1,9 @@
 package QuantityMeasurement;
-
 import com.quantity.measurement.enums.LengthUnit;
 import com.quantity.measurement.model.QuantityLength;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.quantity.measurement.enums.WeightUnit;
+import com.quantity.measurement.model.QuantityWeight;
 import java.util.Scanner;
 
 @SpringBootApplication
