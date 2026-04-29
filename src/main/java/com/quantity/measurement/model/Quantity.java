@@ -1,7 +1,7 @@
 package com.quantity.measurement.model;
+
 import com.quantity.measurement.enums.IMeasurable;
 import java.util.Objects;
-
 
 	public class Quantity<U extends IMeasurable> {
 
@@ -11,10 +11,13 @@ import java.util.Objects;
 
 	    // Constructor
 	    public Quantity(double value, U unit) {
-	        if (unit == null)
-	            throw new NullPointerException("Unit shouldn't be null");
-	        if (Double.isNaN(value))
-	            throw new IllegalArgumentException("Invalid value");
+	    	if (unit == null) {
+	    	    throw new NullPointerException("Unit cannot be null");
+	    	}
+
+	    	if (Double.isNaN(value) || Double.isInfinite(value)) {
+	    	    throw new IllegalArgumentException("Invalid value");
+	    	}
 
 	        this.value = value;
 	        this.unit = unit;

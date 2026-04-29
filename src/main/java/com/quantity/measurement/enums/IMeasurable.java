@@ -1,7 +1,5 @@
 package com.quantity.measurement.enums;
 
-
-
 public interface IMeasurable {
 
     double getConversionFactor();
