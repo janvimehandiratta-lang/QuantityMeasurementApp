@@ -1,7 +1,8 @@
 package com.quantity.measurement.enums;
 
-public enum LengthUnit {
-	FEET(1.0),
+public enum LengthUnit implements IMeasurable {
+
+    FEET(1.0),
     INCH(1.0 / 12),
     YARDS(3.0),
     CENTIMETERS(1.0 / 30.48);
@@ -12,19 +13,26 @@ public enum LengthUnit {
         this.toFeetFactor = toFeetFactor;
     }
 
+    @Override
+    public double getConversionFactor() {
+        return toFeetFactor;
+    }
+
+    @Override
     public double convertToBaseUnit(double value) {
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Invalid value");
-        }
+        validate(value);
         return value * toFeetFactor;
     }
 
+    @Override
     public double convertFromBaseUnit(double value) {
+        validate(value);
+        return value / toFeetFactor;
+    }
+
+    private void validate(double value) {
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Invalid value");
         }
-        return value / toFeetFactor;
     }
-	
-	
 }
