@@ -3,93 +3,145 @@ package com.quantity.measurement.model;
 import com.quantity.measurement.enums.IMeasurable;
 import java.util.Objects;
 
-	public class Quantity<U extends IMeasurable> {
+public class Quantity<U extends IMeasurable> {
 
-	    private final double EPSILON = 1e-6;
-	    private final double value;
-	    private final U unit;
+    private static final double EPSILON = 1e-6;
+    private final double value;
+    private final U unit;
 
-	    // Constructor
-	    public Quantity(double value, U unit) {
-	    	if (unit == null) {
-	    	    throw new NullPointerException("Unit cannot be null");
-	    	}
+    // Constructor
+    public Quantity(double value, U unit) {
+        if (unit == null)
+            throw new NullPointerException("Unit shouldn't be null");
 
-	    	if (Double.isNaN(value) || Double.isInfinite(value)) {
-	    	    throw new IllegalArgumentException("Invalid value");
-	    	}
+        if (Double.isNaN(value) || Double.isInfinite(value))
+            throw new IllegalArgumentException("Invalid value");
 
-	        this.value = value;
-	        this.unit = unit;
-	    }
+        this.value = value;
+        this.unit = unit;
+    }
 
-	    // Getters
-	    public double getValue() {
-	        return value;
-	    }
+    // Getters
+    public double getValue() {
+        return value;
+    }
 
-	    public U getUnit() {
-	        return unit;
-	    }
+    public U getUnit() {
+        return unit;
+    }
 
-	    // Conversion
-	    public Quantity<U> toConvert(U targetUnit) {
-	        if (targetUnit == null)
-	            throw new NullPointerException("Target unit cannot be null");
+    // =========================
+    // CONVERSION
+    // =========================
+    public Quantity<U> toConvert(U targetUnit) {
+        if (targetUnit == null)
+            throw new NullPointerException("Target unit cannot be null");
 
-	        double baseValue = unit.convertToBaseUnit(value);
-	        double converted = targetUnit.convertFromBaseUnit(baseValue);
+        double baseValue = unit.convertToBaseUnit(value);
+        double converted = targetUnit.convertFromBaseUnit(baseValue);
 
-	        return new Quantity<>(converted, targetUnit);
-	    }
+        return new Quantity<>(converted, targetUnit);
+    }
 
-	    // Add
-	    public Quantity<U> add(Quantity<U> other) {
-	        return add(other, this.unit);
-	    }
+    // =========================
+    // ADDITION
+    // =========================
+    public Quantity<U> add(Quantity<U> other) {
+        return add(other, this.unit);
+    }
 
-	    public Quantity<U> add(Quantity<U> other, U targetUnit) {
-	        if (other == null || targetUnit == null)
-	            throw new NullPointerException("Second quantity & targetUnit must not be null");
+    public Quantity<U> add(Quantity<U> other, U targetUnit) {
+        if (other == null || targetUnit == null)
+            throw new NullPointerException("Operands must not be null");
 
-	        if (!this.unit.getClass().equals(other.unit.getClass()))
-	            throw new IllegalArgumentException("Cannot operate on different measurement categories");
+        if (!this.unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Different measurement categories");
 
-	        double thisBase = this.unit.convertToBaseUnit(this.value);
-	        double otherBase = other.unit.convertToBaseUnit(other.value);
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
 
-	        double sumBase = thisBase + otherBase;
-	        double result = targetUnit.convertFromBaseUnit(sumBase);
+        double sumBase = thisBase + otherBase;
+        double result = targetUnit.convertFromBaseUnit(sumBase);
 
-	        return new Quantity<>(result, targetUnit);
-	    }
+        return new Quantity<>(result, targetUnit);
+    }
 
-	    // Equality Check
-	    @Override
-	    public boolean equals(Object obj) {
-	        if (this == obj)
-	            return true;
+    // =========================
+    // SUBTRACTION (UC12)
+    // =========================
 
-	        if (obj == null || getClass() != obj.getClass())
-	            return false;
+    // Implicit (result in this.unit)
+    public Quantity<U> subtract(Quantity<U> other) {
+        return subtract(other, this.unit);
+    }
 
-	        Quantity<?> other = (Quantity<?>) obj;
+    // Explicit target
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
 
-	        if (this.unit.getClass() != other.unit.getClass())
-	            return false;
+        if (other == null || targetUnit == null)
+            throw new NullPointerException("Operands must not be null");
 
-	        double thisInFeet =
-	                this.unit.convertToBaseUnit(this.value);
+        if (!this.unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Different measurement categories");
 
-	        double otherInFeet =
-	                other.unit.convertToBaseUnit(other.getValue());
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
 
-	        return Math.abs(thisInFeet - otherInFeet) < EPSILON;
-	    }
+        double resultBase = thisBase - otherBase;
+        double result = targetUnit.convertFromBaseUnit(resultBase);
 
-	    @Override
-	    public int hashCode() {
-	        double base = unit.convertToBaseUnit(value);
-	        return Objects.hash(Math.round(base / EPSILON));
-	    }
-	}
+       
+        
+
+        return new Quantity<>(result, targetUnit);
+    }
+
+    // =========================
+    // DIVISION (UC12)
+    // =========================
+    public double divide(Quantity<U> other) {
+
+        if (other == null)
+            throw new NullPointerException("Operand must not be null");
+
+        if (!this.unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Different measurement categories");
+
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
+
+        // ✅ UC12 strict rule
+        if (otherBase == 0)
+            throw new ArithmeticException("Division by zero");
+
+        return thisBase / otherBase; // no rounding
+    }
+
+    // =========================
+    // EQUALITY
+    // =========================
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
+        Quantity<?> other = (Quantity<?>) obj;
+
+        if (this.unit.getClass() != other.unit.getClass())
+            return false;
+
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
+
+        return Math.abs(thisBase - otherBase) < EPSILON;
+    }
+
+    @Override
+    public int hashCode() {
+        double base = unit.convertToBaseUnit(value);
+        return Objects.hash(Math.round(base / EPSILON));
+    }
+}
