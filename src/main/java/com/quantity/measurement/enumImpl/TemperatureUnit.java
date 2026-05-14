@@ -1,5 +1,6 @@
-package com.quantity.measurement.enums;
+package com.quantity.measurement.enumImpl;
 import com.quantity.measurement.enums.IMeasurable;
+
 import java.util.function.Function;
 
 public enum TemperatureUnit implements IMeasurable {
