@@ -2,7 +2,7 @@ package com.quantity.measurement.enums;
 
 public interface IMeasurable {
 
-	double getConversionFactor();
+    double getConversionFactor();
 
     double convertToBaseUnit(double value);
 
@@ -21,5 +21,5 @@ public interface IMeasurable {
 
     default void validateOperationSupport(String operation) {
     }
-    
+
 }

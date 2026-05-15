@@ -1,8 +1,7 @@
 package com.quantity.measurement.controller;
+
 import com.quantity.measurement.dto.QuantityDTO;
-
 import com.quantity.measurement.service.Service;
-
 public class Controller {
 
     private final Service service;
@@ -30,4 +29,4 @@ public class Controller {
     public QuantityDTO performCompare(QuantityDTO q1, QuantityDTO q2) {
         return service.compare(q1, q2);
     }
-}
+}	

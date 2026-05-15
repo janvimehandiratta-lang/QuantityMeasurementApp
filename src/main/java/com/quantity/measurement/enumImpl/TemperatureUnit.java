@@ -1,6 +1,6 @@
 package com.quantity.measurement.enumImpl;
 import com.quantity.measurement.enums.IMeasurable;
-
+import com.quantity.measurement.dto.QuantityDTO;
 import java.util.function.Function;
 
 public enum TemperatureUnit implements IMeasurable {

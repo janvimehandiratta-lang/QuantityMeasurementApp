@@ -1,5 +1,5 @@
 package com.quantity.measurement.enumImpl;
-
+import com.quantity.measurement.dto.QuantityDTO;
 import com.quantity.measurement.enums.IMeasurable;
 
 public enum WeightUnit implements IMeasurable {
