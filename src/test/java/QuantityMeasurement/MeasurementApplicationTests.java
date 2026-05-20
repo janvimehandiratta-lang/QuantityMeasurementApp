@@ -1,14 +1,15 @@
 package QuantityMeasurement;
 
-import com.quantity.measurement.enums.IMeasurable;
-import com.quantity.measurement.enumImpl.TemperatureUnit;
-import com.quantity.measurement.enumImpl.VolumeUnit;
-import com.quantity.measurement.enumImpl.WeightUnit;
-import com.quantity.measurement.model.Quantity;
-import com.quantity.measurement.model.QuantityWeight;
-import com.quantity.measurement.model.QuantityLength;
-import com.quantity.measurement.enumImpl.LengthUnit;
 import org.junit.jupiter.api.Test;
+
+import com.app.quantitymeasurement.enumImpl.LengthUnit;
+import com.app.quantitymeasurement.enumImpl.TemperatureUnit;
+import com.app.quantitymeasurement.enumImpl.VolumeUnit;
+import com.app.quantitymeasurement.enumImpl.WeightUnit;
+import com.app.quantitymeasurement.enums.IMeasurable;
+import com.app.quantitymeasurement.model.Quantity;
+import com.app.quantitymeasurement.model.QuantityLength;
+import com.app.quantitymeasurement.model.QuantityWeight;
 
 import static org.junit.jupiter.api.Assertions.*;
 
